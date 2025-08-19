@@ -1,5 +1,6 @@
 import os 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'video_uploader',
 ]
 
@@ -105,7 +107,7 @@ USE_TZ = True
 
 # REST 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
+   'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -124,7 +126,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
-VIMEO_ACCESS_TOKEN = os.getenv('VIMEO_ACCESS_TOKEN')
-DAILYMOTION_API_KEY = os.getenv('DAILYMOTION_API_KEY')
+VIMEO_ACCESS_TOKEN = 'IS SIMULATED'
+CLIENT_ID = config('YOUTUBE_CLIENT_ID')
+CLIENT_SECRET = config('YOUTUBE_CLIENT_SECRET')
+YOUTUBE_REDIRECT_URI = 'http://localhost:8192/oauth2callback'

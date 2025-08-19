@@ -3,12 +3,22 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 class Platform(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    PLATFORMS = (
+        ('youtube', 'YouTube'),
+        ('vimeo', 'Vimeo'),
+        ('dailymotion', 'Dailymotion'),
+        # ('twitch', 'Twitch'),
+        # ('snapchat', 'Snapchat'),
+        # ('vkontakte', 'VKontakte'),
+        # ('odnoklassniki', 'Odnoklassniki'),
+        # ('weibo', 'Weibo'),
+    )
+    platform = models.CharField(choices=PLATFORMS, max_length=50, unique=True)
     api_endpoint = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
-        return self.name
+        return self.platform
 
 
 class VideoPost(models.Model):
@@ -22,18 +32,40 @@ class VideoPost(models.Model):
     
     title = models.CharField(max_length=200)
     description = models.TextField()
-    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
-    video_url = models.URLField(blank=True, null=True, help_text="Alternative to video file")
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True, help_text='Required for YouTube uploads')
+    video_url = models.URLField(blank=True, null=True, help_text="Alternative to video file, but not accepted for YouTube")
     platforms = models.ManyToManyField(Platform, through='UploadStatus')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def clean(self):
+        """
+        Validate that either video_file or video_url is provided.
+        """
         super().clean()
         if not self.video_file and not self.video_url:
-            raise ValidationError("You must provide either a video file or a video URL.")
-    
+            raise ValidationError({
+                'video_file': 'You must provide either a video file or a video URL.',
+                'video_url': 'You must provide either a video file or a video URL.'
+            })
+
+    def save(self, *args, **kwargs):
+        # Call full_clean to enforce basic validation
+        self.full_clean()
+        super().save(*args, **kwargs)
+        # Validate platforms after save when id is available
+        platforms = self.platforms.all()
+        if any(platform.platform.lower() == 'youtube' for platform in platforms):
+            if not self.video_file:
+                raise ValidationError({
+                    'video_file': 'A video file is required for YouTube uploads.'
+                })
+            if self.video_url:
+                raise ValidationError({
+                    'video_url': 'YouTube API does not accept video URLs. Please provide a video file.'
+                })
+
     def __str__(self):
         return self.title
     
@@ -48,6 +80,7 @@ class VideoPost(models.Model):
             return 'uploading'
         return 'pending'
 
+
 class UploadStatus(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -61,10 +94,10 @@ class UploadStatus(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     external_id = models.CharField(max_length=200, blank=True)
     error_message = models.TextField(blank=True)
-    uploaded_at = models.DateTimeField(null=True, blank=True)
+    uploaded_at = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     
     class Meta:
         unique_together = ['video_post', 'platform']
     
     def __str__(self):
-        return f"{self.video_post.title} - {self.platform.name} - {self.status}"
+        return f"{self.video_post.title} - {self.platform.platform} - {self.status}"

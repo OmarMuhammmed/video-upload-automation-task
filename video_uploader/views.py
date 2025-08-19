@@ -4,15 +4,18 @@ from rest_framework.response import Response
 from .models import VideoPost, Platform
 from .serializers import VideoPostSerializer, PlatformSerializer
 from .services.upload_manager import VideoUploadManager
+from rest_framework.permissions import IsAuthenticated
 
 
 class PlatformViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Platform.objects.filter(is_active=True)
     serializer_class = PlatformSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class VideoPostViewSet(viewsets.ModelViewSet):
     serializer_class = VideoPostSerializer
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         return VideoPost.objects.filter(created_by=self.request.user)

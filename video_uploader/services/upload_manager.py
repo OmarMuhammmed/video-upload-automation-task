@@ -21,10 +21,10 @@ class VideoUploadManager:
             upload_status.save()
             
             # Get platform service
-            service = PlatformServiceFactory.get_service(platform.name)
+            service = PlatformServiceFactory.get_service(platform.platform)
             if not service:
                 upload_status.status = 'failed'
-                upload_status.error_message = f'No service available for {platform.name}'
+                upload_status.error_message = f'No service available for {platform.paltform}'
                 upload_status.save()
                 continue
             
@@ -42,7 +42,7 @@ class VideoUploadManager:
                 
                 upload_status.save()
                 results.append({
-                    'platform': platform.name,
+                    'platform': platform.platform,
                     'status': upload_status.status,
                     'message': result.get('message', result.get('error', ''))
                 })
@@ -53,7 +53,7 @@ class VideoUploadManager:
                 upload_status.save()
                 
                 results.append({
-                    'platform': platform.name,
+                    'platform': platform.platform,
                     'status': 'failed',
                     'message': str(e)
                 })

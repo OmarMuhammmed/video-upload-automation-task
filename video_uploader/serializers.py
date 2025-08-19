@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import VideoPost, Platform, UploadStatus
 
+
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
-        fields = ['id', 'name']
+        fields = ['id', 'platform']
+
 
 class UploadStatusSerializer(serializers.ModelSerializer):
     platform = PlatformSerializer(read_only=True)
@@ -12,6 +14,7 @@ class UploadStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadStatus
         fields = ['platform', 'status', 'external_id', 'uploaded_at', 'error_message']
+
 
 class VideoPostSerializer(serializers.ModelSerializer):
     upload_statuses = UploadStatusSerializer(many=True, read_only=True)
@@ -45,8 +48,3 @@ class VideoPostSerializer(serializers.ModelSerializer):
             VideoUploadManager.upload_to_platforms(video_post)
         
         return video_post
-    
-    def validate(self, data):
-        if not data.get('video_file') and not data.get('video_url'):
-            raise serializers.ValidationError("You must provide either a video file or a video URL.")
-        return data
