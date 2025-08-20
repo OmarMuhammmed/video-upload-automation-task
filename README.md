@@ -13,6 +13,7 @@ This is a Django-based project designed to automate video uploads to multiple pl
 - [API Integration Details](#api-integration-details)
 - [Database Design](#database-design)
 - [Postman Collection](#postman-collection)
+- [Demo](#demo)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -60,7 +61,7 @@ video-upload-automation-task/
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/video-upload-automation-task.git
+   git clone https://github.com/OmarMuhammmed/video-upload-automation-task.git
    cd video-upload-automation-task
    ```
 2. Create a virtual environment and activate it:
@@ -80,8 +81,6 @@ video-upload-automation-task/
    ```bash
    python manage.py createsuperuser
    ```
-
-
 
 ## Obtaining YouTube API Credentials
 To use the YouTube upload feature, you need to obtain `YOUTUBE_CLIENT_ID` and `YOUTUBE_CLIENT_SECRET` from Google Cloud Console and configure the redirect URI.
@@ -149,6 +148,9 @@ The database schema is designed to manage video posts, platforms, and their uplo
 
 ## Postman Collection
 - Download and import the Postman collection: [Video Upload API Collection](https://documenter.getpostman.com/view/35038234/2sB3BKFTeP)
+
+## Demo
+- Check out the live demo: [Video Upload Demo](https://drive.google.com/file/d/16deKcFYjLtHJ2FdrsWgn4WAOcQLwcR7_/view?usp=sharing)
 
 ## Contributing
 Feel free to submit issues or pull requests. Ensure you follow the project's coding standards.
