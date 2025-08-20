@@ -10,7 +10,7 @@
 - [X] Implement URLs
 - [X] Test Services and Views
 - [X] Write Docs with Postman Collection
-    - [ ] Solve errors apear in test 
+    - [X] Solve errors apear in test and - status private or public in youtube
 - [ ] Create Demo for Task 
 
 
@@ -18,10 +18,3 @@
 - [ ] Celery Tasks
 - [ ] Logging
 
-
-{
-    "title": "Test create video post",
-    "description": "This is a test video for YouTube and Twitch.",
-    "video_url": "https://example.com/myvideo.mp4",
-    "platform_ids": [1]
-}

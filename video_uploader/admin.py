@@ -7,7 +7,7 @@ class PlatformAdmin(admin.ModelAdmin):
     list_display = ['platform', 'is_active', 'api_endpoint']
     list_filter = ['is_active']
 
-
+admin.site.register(UploadStatus)
 class UploadStatusInline(admin.TabularInline):
     model = UploadStatus
     extra = 0

@@ -86,7 +86,7 @@ class YouTubeService(BasePlatformService):
                     'categoryId': '22'  # People & Blogs
                 },
                 'status': {
-                    'privacyStatus': 'private'
+                    'privacyStatus': 'public'
                 }
             }
             
